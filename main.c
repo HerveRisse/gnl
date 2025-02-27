@@ -30,12 +30,11 @@ void test_file(const char *filename)
 
 int main(void)
 {
-    // First create test files
-    int fd1 = open("test1.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    int fd2 = open("test2.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    int fd3 = open("test3.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    int fd1 = open("normal.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    int fd2 = open("no_newline.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    int fd3 = open("empty_line.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    int	fd4 = open("empty_file.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 
-    // Write test content
     write(fd1, "Hello World!\nThis is a test file.\nWith multiple lines.\n", 54);
     write(fd2, "No newline at the end of this file", 33);
     write(fd3, "\nEmpty lines\n\nBetween text\n", 27);
@@ -43,13 +42,13 @@ int main(void)
     close(fd1);
     close(fd2);
     close(fd3);
+    close(fd4);
 
-    // Test with different files
-    test_file("test1.txt");  // Normal case with newlines
-    test_file("test2.txt");  // File without newline at the end
-    test_file("test3.txt");  // File with empty lines
+    test_file("normal.txt");
+    test_file("no_newline.txt");
+    test_file("empty_line.txt");
+    test_file("empty_file.txt");
 
-    // Clean up test files
     unlink("test1.txt");
     unlink("test2.txt");
     unlink("test3.txt");
