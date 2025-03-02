@@ -49,12 +49,13 @@ int main(void)
     test_file("no_newline.txt");
     test_file("empty_line.txt");
     test_file("empty_file.txt");
+    test_file("bible.txt");
+    test_file("reveur.txt");
 
     unlink("normal.txt");
     unlink("no_newline.txt");
     unlink("empty_line.txt");
     unlink("empty_file.txt");
-
 
     return (0);
 }
