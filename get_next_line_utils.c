@@ -1,94 +1,115 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hrisse <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/27 10:39:25 by hrisse            #+#    #+#             */
-/*   Updated: 2025/02/27 10:40:08 by hrisse           ###   ########.fr       */
+/*   Created: 2025/02/27 10:40:22 by hrisse            #+#    #+#             */
+/*   Updated: 2025/02/27 10:40:26 by hrisse           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char *extract_line(char **stash)
+size_t	ft_strlen(const char *s)
 {
-	char *line;
-	char *newline_pos;
-	char *temp;
-	size_t line_len;
+	size_t	i;
 
-	if (!*stash || !**stash)
-		return (NULL);
-	newline_pos = ft_strchr(*stash, '\n');
-	if (newline_pos)
-	{
-		line_len = newline_pos - *stash + 1;
-		line = ft_substr(*stash, 0, line_len);
-		if (!line)
-			return (NULL);
-		temp = ft_strdup(newline_pos + 1);
-		if (!temp)
-		{
-			free(line);
-			return (NULL);
-		}
-		free(*stash);
-		*stash = temp;
-		return (line);
-	}
-	line = ft_strdup(*stash);
-	if (!line)
-		return (NULL);
-	free(*stash);
-	*stash = NULL;
-	return (line);
+	i = 0;
+	if (!s)
+		return (0);
+	while (s[i])
+		i++;
+	return (i);
 }
 
-static char *read_and_stash(int fd, char **stash)
+char	*ft_strchr(const char *s, int c)
 {
-	char *buffer;
-	char *temp;
-	ssize_t bytes_read;
+	unsigned int	i;
 
-	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buffer)
+	i = 0;
+	if (!s)
 		return (NULL);
-	bytes_read = 1;
-	while (bytes_read > 0 && !ft_strchr(*stash, '\n'))
+	while (s[i])
 	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1)
-		{
-			free(buffer);
-			free(*stash);
-			*stash = NULL;
-			return (NULL);
-		}
-		buffer[bytes_read] = '\0';
-		temp = ft_strjoin(*stash, buffer);
-		if (!temp)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		free(*stash);
-		*stash = temp;
+		if (s[i] == (char)c)
+			return ((char *)&s[i]);
+		i++;
 	}
-	free(buffer);
-	return (*stash);
+	if (s[i] == (char)c)
+		return ((char *)&s[i]);
+	return (NULL);
 }
 
-char *get_next_line(int fd)
+char	*ft_strdup(const char *s)
 {
-	static char *stash;
+	char	*str;
+	size_t	i;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (!s)
 		return (NULL);
-	if (!stash)
-		stash = ft_strdup("");
-	if (!read_and_stash(fd, &stash))
+	str = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
+	if (!str)
 		return (NULL);
-	return (extract_line(&stash));
+	i = 0;
+	while (s[i])
+	{
+		str[i] = s[i];
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*str;
+	size_t	i;
+	size_t	j;
+
+	if (!s1)
+		return (ft_strdup(s2));
+	if (!s2)
+		return (ft_strdup(s1));
+	str = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (s1[i])
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (s2[j])
+		str[i++] = s2[j++];
+	str[i] = '\0';
+	return (str);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*str;
+	size_t	i;
+	size_t	s_len;
+
+	if (!s)
+		return (NULL);
+	s_len = ft_strlen(s);
+	if (start >= s_len)
+		return (ft_strdup(""));
+	if (len > s_len - start)
+		len = s_len - start;
+	str = (char *)malloc(sizeof(char) * (len + 1));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (i < len && s[start + i])
+	{
+		str[i] = s[start + i];
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
 }
