@@ -69,12 +69,23 @@ static char	*read_and_stash(int fd, char **stash)
 char	*get_next_line(int fd)
 {
 	static char	*stash;
+	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	if (!stash)
 		stash = ft_strdup("");
 	if (!read_and_stash(fd, &stash))
+	{
+		free(stash);
+		stash = NULL;
 		return (NULL);
-	return (extract_line(&stash));
+	}
+	line = extract_line(&stash);
+	if (!line && stash)
+	{
+		free(stash);
+		stash = NULL;
+	}
+	return (line);
 }

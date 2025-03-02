@@ -8,6 +8,7 @@ void test_file(const char *filename)
     char *line;
     int line_count = 0;
 
+    printf("\n------------------------");
     printf("\nTesting file: %s\n", filename);
     printf("------------------------\n");
     
@@ -49,9 +50,11 @@ int main(void)
     test_file("empty_line.txt");
     test_file("empty_file.txt");
 
-    unlink("test1.txt");
-    unlink("test2.txt");
-    unlink("test3.txt");
+    unlink("normal.txt");
+    unlink("no_newline.txt");
+    unlink("empty_line.txt");
+    unlink("empty_file.txt");
+
 
     return (0);
 }
