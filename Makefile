@@ -17,7 +17,7 @@ $(NAME): $(OBJS)
 	ar rcs $(NAME) $(OBJS)
 
 test: fclean $(TEST_NAME)
-	./$(TEST_NAME)
+	valgrind --leak-check=full ./$(TEST_NAME)
 
 $(TEST_NAME): $(TEST_SRCS)
 	$(CC) $(CFLAGS) -D BUFFER_SIZE=$(BUFFER_SIZE) $(TEST_SRCS) -o $(TEST_NAME)
